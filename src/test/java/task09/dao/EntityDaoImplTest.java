@@ -106,10 +106,10 @@ public class EntityDaoImplTest extends Assert {
     public void c_testUpdateName() throws InvocationTargetException,
             NoSuchMethodException, InstantiationException, IllegalAccessException {
         daoPeople.insert(people1);
-
-        daoPeople.select();
         daoPeople.updateName(people1.getId(), NAME_TO_UPDATE);
-        assertEquals(NAME_TO_UPDATE, people1.getName());
+
+        People peopleFromDB = em.find(People.class, people1.getId());
+        assertEquals(peopleFromDB.getName(), NAME_TO_UPDATE);
         daoPeople.select();
     }
 
@@ -118,14 +118,13 @@ public class EntityDaoImplTest extends Assert {
             NoSuchMethodException, InstantiationException, IllegalAccessException {
         daoAddress.insert(address1);
         daoAddress.updateCity(address1.getId(), CITY_TO_UPDATE);
+        Address addressFromDB = em.find(Address.class, address1.getId());
 
         assertEquals("City with id = " + address1.getId() + " wasn`t update",
-                address1.getCity(), CITY_TO_UPDATE);
-
+                addressFromDB.getCity(), CITY_TO_UPDATE);
     }
 
     @AfterClass
-
     public static void cleanUp() {
         em.close();
         HibernateUtil.close();
